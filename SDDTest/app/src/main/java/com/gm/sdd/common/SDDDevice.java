@@ -90,6 +90,7 @@ public class SDDDevice {
             device.setDeviceType(jsonObject.getString("deviceType"));
         } catch (JSONException e) {
             e.printStackTrace();
+            return null;
         }
 
         return device;
