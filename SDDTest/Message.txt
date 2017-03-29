@@ -1,0 +1,14 @@
+1 SDDClient启动时，在局域网内每隔5秒钟发送3次广播消息，消息格式如下：
+SDD_SEARCH:<DEVICE_TYPE>
+其中<DEVICE_TYPE>是自定义的搜索类型。
+
+2 SDDServer启动时，在局域网内发送3次广播消息(SDDServer收到消息1后，当满足搜索要求时，向SDDClient发送3次UDP消息)，消息格式如下：
+{
+	"uuid":string,	// 设备uuid
+	"name":string,  // 设备名字
+	"ip":string,	// 设备ip
+	"mac":string,	// 设备mac地址
+	"iconUrl":string,	// 设备图标地址
+	"port":num,		// 设备上启动的HTTP SERVER的端口号
+	"deviceType":string	// 设备类型，对应消息1中的搜索类型
+}
