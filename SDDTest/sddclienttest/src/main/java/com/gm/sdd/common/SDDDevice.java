@@ -1,5 +1,8 @@
 package com.gm.sdd.common;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by 80066158 on 2017-03-17.
  */
@@ -67,6 +70,30 @@ public class SDDDevice {
 
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
+    }
+
+    public static SDDDevice parse(String jsonStr) {
+        if (null == jsonStr) {
+            return null;
+        }
+
+        SDDDevice device = new SDDDevice();
+
+        try {
+            JSONObject jsonObject = new JSONObject(jsonStr);
+            device.setUuid(jsonObject.getString("uuid"));
+            device.setName(jsonObject.getString("name"));
+            device.setIp(jsonObject.getString("ip"));
+            device.setMac(jsonObject.getString("mac"));
+            device.setIconUrl(jsonObject.getString("iconUrl"));
+            device.setPort(jsonObject.getInt("port"));
+            device.setDeviceType(jsonObject.getString("deviceType"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return device;
     }
 
     @Override
