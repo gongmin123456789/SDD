@@ -79,4 +79,13 @@ public class UdpClient {
             e.printStackTrace();
         }
     }
+
+    public void close() {
+        Log.i(TAG, "<close> start");
+
+        if (null != socket) {
+            socket.close();
+            socket = null;
+        }
+    }
 }

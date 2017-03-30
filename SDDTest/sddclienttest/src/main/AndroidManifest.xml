@@ -14,6 +14,7 @@
             </intent-filter>
         </activity>
         <service android:name="com.gm.sdd.client.SDDClientService" />
+        <service android:name="com.gm.sdd.server.SDDServerService" />
     </application>
 
 </manifest>

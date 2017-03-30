@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.gm.sdd.common.IOnRemoteDataReceiveListener;
+import com.gm.sdd.common.SDDConstant;
 import com.gm.sdd.common.SDDDevice;
 import com.gm.sdd.udp.UdpClient;
 import com.gm.sdd.udp.UdpServer;
@@ -21,11 +22,9 @@ public class SDDClientService extends Service {
     public static final String INTENT_EXTRA_NAME_SEARCH_TYPE = "searchType";
     public static final String INTENT_EXTRA_NAME_ON_DEVICE_CHANGE_LISTENER = "onDeviceChangeListener";
 
-    private static final String SEARCH_DEVICE_CMD_HEAD = "SDD_SEARCH:";
-    private static final String BROADCAST_ADDR = "255.255.255.255";
-    private static final int REMOTE_PORT = 8888;
+    private static final int REMOTE_PORT = SDDConstant.UDP_PORT1;
+    private static final int UDP_SERVER_PORT = SDDConstant.UDP_PORT2;
     private static final int SEARCH_PERIOD = 5000; // 5000ms
-    private static final int UDP_SERVER_PORT = 18888;
 
     private String searchType = null;   // the deviceType of device which will be search
     private IOnDeviceChangeListener onDeviceChangeListener = null;
@@ -82,8 +81,8 @@ public class SDDClientService extends Service {
         Log.i(TAG, "<startSearchDevice> start");
 
         isSearchStarted = true;
-        final String searchCmd = SEARCH_DEVICE_CMD_HEAD + searchType;
-        final UdpClient udpClient = new UdpClient(BROADCAST_ADDR, REMOTE_PORT);
+        final String searchCmd = SDDConstant.SEARCH_DEVICE_CMD_HEAD + searchType;
+        final UdpClient udpClient = new UdpClient(SDDConstant.BROADCAST_ADDR, REMOTE_PORT);
         final int count = 3;
 
         new Thread(new Runnable() {
@@ -104,6 +103,8 @@ public class SDDClientService extends Service {
                         }
                     }
                 }
+
+                udpClient.close();
             }
         }).start();
     }
