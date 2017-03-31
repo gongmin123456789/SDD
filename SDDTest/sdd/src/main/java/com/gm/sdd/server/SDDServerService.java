@@ -24,7 +24,8 @@ public class SDDServerService extends Service implements IOnRemoteDataReceiveLis
     private static final int UDP_SERVER_PORT = SDDConstant.UDP_PORT1;
 
     private SDDDevice device = null;
-    private String deviceAliveMsg = null;
+    private String deviceOnLineMsg = null;
+    private String deviceOffLineMsg = null;
     private boolean isUdpServerStarted = false;
     private UdpServer udpServer = null;
 
@@ -38,6 +39,8 @@ public class SDDServerService extends Service implements IOnRemoteDataReceiveLis
     public void onDestroy() {
         Log.i(TAG, "<onDestroy> start");
         stopUdpServer();
+        sendDeviceOffLineMsg(SDDConstant.BROADCAST_ADDR, REMOTE_PORT);
+
         super.onDestroy();
     }
 
@@ -46,27 +49,47 @@ public class SDDServerService extends Service implements IOnRemoteDataReceiveLis
         Log.i(TAG, "<onStartCommand> start");
 
         device = intent.getParcelableExtra(INTENT_EXTRA_NAME_SDDDEVICE);
-        deviceAliveMsg = device.toString();
+        String deviceStr = device.toString();
+        deviceOnLineMsg = "{\"msgType\":\"" +
+                SDDConstant.MSG_TYPE_ON_LINE + "\"," +
+                deviceStr.substring(1);
+        deviceOffLineMsg = "{\"msgType\":\"" +
+                SDDConstant.MSG_TYPE_OFF_LINE + "\"," +
+                deviceStr.substring(1);
 
-        sendDeviceAliveMsg(SDDConstant.BROADCAST_ADDR, REMOTE_PORT);
+        sendDeviceOnLineMsg(SDDConstant.BROADCAST_ADDR, REMOTE_PORT);
         startUdpServer();
 
         return super.onStartCommand(intent, flags, startId);
     }
 
-    private void sendDeviceAliveMsg(final String remoteIp, final int remotePort) {
-        Log.i(TAG, "<sendDeviceAliveMsg> start");
+    private void sendDeviceOnLineMsg(final String remoteIp, final int remotePort) {
+        Log.i(TAG, "<sendDeviceOnLineMsg> start");
 
         new Thread(new Runnable() {
             @Override
             public void run() {
                 sendMsg(remoteIp,
                         remotePort,
-                        deviceAliveMsg,
+                        deviceOnLineMsg,
                         3);
             }
         }).start();
 
+    }
+
+    private void sendDeviceOffLineMsg(final String remoteIp, final int remotePort) {
+        Log.i(TAG, "<sendDeviceOffLineMsg> start");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                sendMsg(remoteIp,
+                        remotePort,
+                        deviceOffLineMsg,
+                        3);
+            }
+        }).start();
     }
 
     private void sendMsg(final String remoteIp,
@@ -127,7 +150,7 @@ public class SDDServerService extends Service implements IOnRemoteDataReceiveLis
         }
 
         if (needSendDeviceAliveMsg) {
-            sendDeviceAliveMsg(remoteIp, remotePort);
+            sendDeviceOnLineMsg(remoteIp, REMOTE_PORT);
         }
     }
 

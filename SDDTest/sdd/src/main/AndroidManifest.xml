@@ -2,4 +2,7 @@
     package="com.gm.sdd">
 
 
+    <application>
+        <service android:name=".server.SDDServerService" />
+    </application>
 </manifest>

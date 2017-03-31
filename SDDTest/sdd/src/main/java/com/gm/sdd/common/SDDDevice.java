@@ -107,15 +107,14 @@ public class SDDDevice implements Parcelable {
         this.deviceType = deviceType;
     }
 
-    public static SDDDevice parse(String jsonStr) {
-        if (null == jsonStr) {
+    public static SDDDevice parse(JSONObject jsonObject) {
+        if (null == jsonObject) {
             return null;
         }
 
         SDDDevice device = new SDDDevice();
 
         try {
-            JSONObject jsonObject = new JSONObject(jsonStr);
             device.setUuid(jsonObject.getString(UUID));
             device.setName(jsonObject.getString(NAME));
             device.setIp(jsonObject.getString(IP));

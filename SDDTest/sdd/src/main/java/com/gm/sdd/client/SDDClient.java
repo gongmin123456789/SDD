@@ -15,14 +15,12 @@ import java.util.List;
  * Created by 80066158 on 2017-03-17.
  */
 
-public class SDDClient implements IOnDeviceChangeListener, Parcelable {
+public class SDDClient {
     private static final String TAG = "SDDClient";
 
     private Context context = null;
     private String searchType = null;   // the deviceType of device which will be search
-    private IOnDeviceChangeListener onDeviceChangeListener = null;
     private boolean isStarted = false;
-    private List<SDDDevice> deviceList = null;
 
     public SDDClient(Context context, String searchType) {
         this.context = context;
@@ -30,7 +28,7 @@ public class SDDClient implements IOnDeviceChangeListener, Parcelable {
     }
 
     public void setOnDeviceChangeListener(IOnDeviceChangeListener onDeviceChangeListener) {
-        this.onDeviceChangeListener = onDeviceChangeListener;
+        SDDDeviceManager.setOnDeviceChangeListener(onDeviceChangeListener);
     }
 
     public void start() {
@@ -42,12 +40,10 @@ public class SDDClient implements IOnDeviceChangeListener, Parcelable {
 
         // init data
         isStarted = true;
-        deviceList = new ArrayList<SDDDevice>();
 
         // start service
         Intent intent = new Intent(context, SDDClientService.class);
         intent.putExtra(SDDClientService.INTENT_EXTRA_NAME_SEARCH_TYPE, searchType);
-        intent.putExtra(SDDClientService.INTENT_EXTRA_NAME_ON_DEVICE_CHANGE_LISTENER, this);
         context.startService(intent);
     }
 
@@ -60,7 +56,6 @@ public class SDDClient implements IOnDeviceChangeListener, Parcelable {
 
         // clear data
         isStarted = false;
-        deviceList = new ArrayList<SDDDevice>();
 
         // stop service
         Intent intent = new Intent(context, SDDClientService.class);
@@ -73,9 +68,6 @@ public class SDDClient implements IOnDeviceChangeListener, Parcelable {
         if (!isStarted) {
             // if not start, start it
             start();
-        } else {
-            // if started, just clear deviceList
-            deviceList = new ArrayList<SDDDevice>();
         }
     }
 
@@ -93,44 +85,6 @@ public class SDDClient implements IOnDeviceChangeListener, Parcelable {
     }
 
     public List<SDDDevice> getDeviceList() {
-        return deviceList;
-    }
-
-    @Override
-    public void onDeviceChange(final SDDDevice newAddedDevice) {
-        Log.i(TAG, "<onDeviceChange> " + newAddedDevice.toString());
-        if (null == onDeviceChangeListener) {
-            Log.w(TAG, "<onDeviceChange> onDeviceChangeListener is null");
-            return;
-        }
-
-        onDeviceChangeListener.onDeviceChange(newAddedDevice);
-    }
-
-
-    protected SDDClient(Parcel in) {
-        searchType = in.readString();
-    }
-
-    public static final Creator<SDDClient> CREATOR = new Creator<SDDClient>() {
-        @Override
-        public SDDClient createFromParcel(Parcel in) {
-            return new SDDClient(in);
-        }
-
-        @Override
-        public SDDClient[] newArray(int size) {
-            return new SDDClient[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(searchType);
+        return SDDDeviceManager.getDeviceList();
     }
 }

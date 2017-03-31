@@ -3,16 +3,20 @@ package com.example.sddclienttest;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.widget.ListView;
 
+import com.gm.sdd.client.SDDDeviceManager;
+import com.gm.sdd.client.IOnDeviceChangeListener;
 import com.gm.sdd.client.SDDClient;
+import com.gm.sdd.common.SDDDevice;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements IOnDeviceChangeListener {
 
     private static final String TAG = "MainActivity";
 
-    private Button button = null;
+    private ListView deviceListView = null;
+    private DeviceListViewAdapter deviceListViewAdapter = null;
+    private SDDClient sddClient = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,20 +24,53 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initContent();
+        startSDDClient();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.i(TAG, "<onDestroy> start");
+
+        stopSDDClient();
+        super.onDestroy();
     }
 
     private void initContent() {
         Log.i(TAG, "<initContent> start");
 
-        button = (Button) findViewById(R.id.okButton);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(TAG, "<button:onClick> start");
+        deviceListView = (ListView) findViewById(R.id.deviceListView);
+        deviceListViewAdapter = new DeviceListViewAdapter(this, null);
+        deviceListView.setAdapter(deviceListViewAdapter);
+    }
 
-                SDDClient sddClient = new SDDClient(getApplicationContext(), "gongmin");
-                sddClient.start();
-            }
-        });
+    private void startSDDClient() {
+        Log.i(TAG, "<startSDDClient> start");
+
+        sddClient = new SDDClient(this, "*");
+        sddClient.setOnDeviceChangeListener(this);
+        sddClient.start();
+    }
+
+    private void stopSDDClient() {
+        Log.i(TAG, "<stopSDDClient> start");
+
+        if (null != sddClient) {
+            sddClient.stop();
+            sddClient = null;
+        }
+    }
+
+    @Override
+    public void onDeviceOnLine(SDDDevice device) {
+        Log.i(TAG, "<onDeviceOnLine> " + device.toString());
+
+        deviceListViewAdapter.setDeviceList(sddClient.getDeviceList());
+    }
+
+    @Override
+    public void onDeviceOffLine(SDDDevice device) {
+        Log.i(TAG, "<onDeviceOffLine> " + device.toString());
+
+        deviceListViewAdapter.setDeviceList(sddClient.getDeviceList());
     }
 }

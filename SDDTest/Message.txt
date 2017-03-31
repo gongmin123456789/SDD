@@ -4,6 +4,19 @@ SDD_SEARCH:<DEVICE_TYPE>
 
 2 SDDServer启动时，在局域网内发送3次广播消息(SDDServer收到消息1后，当满足搜索要求时，向SDDClient（端口号为18888）发送3次UDP消息，同时SDDDevice会启动一个8888端口号用于接收UDP消息，主要用于接收SDDClient发出的广播消息)，消息格式如下：
 {
+	"msgType":"onLine",	// 消息类型
+	"uuid":string,	// 设备uuid
+	"name":string,  // 设备名字
+	"ip":string,	// 设备ip
+	"mac":string,	// 设备mac地址
+	"iconUrl":string,	// 设备图标地址
+	"port":num,		// 设备上启动的HTTP SERVER的端口号
+	"deviceType":string	// 设备类型，对应消息1中的搜索类型
+}
+
+3 SDDServer关闭时，在局域网内发送3次广播消息，消息格式如下：
+{
+	"msgType":"offLine",	// 消息类型
 	"uuid":string,	// 设备uuid
 	"name":string,  // 设备名字
 	"ip":string,	// 设备ip

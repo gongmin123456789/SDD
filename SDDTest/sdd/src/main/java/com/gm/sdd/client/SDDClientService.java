@@ -11,22 +11,23 @@ import com.gm.sdd.common.SDDDevice;
 import com.gm.sdd.udp.UdpClient;
 import com.gm.sdd.udp.UdpServer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by 80066158 on 2017-03-17.
  */
 
-public class SDDClientService extends Service {
+public class SDDClientService extends Service implements IOnRemoteDataReceiveListener {
     private static final String TAG = "SDDClientService";
 
     public static final String INTENT_EXTRA_NAME_SEARCH_TYPE = "searchType";
-    public static final String INTENT_EXTRA_NAME_ON_DEVICE_CHANGE_LISTENER = "onDeviceChangeListener";
 
     private static final int REMOTE_PORT = SDDConstant.UDP_PORT1;
     private static final int UDP_SERVER_PORT = SDDConstant.UDP_PORT2;
     private static final int SEARCH_PERIOD = 5000; // 5000ms
 
     private String searchType = null;   // the deviceType of device which will be search
-    private IOnDeviceChangeListener onDeviceChangeListener = null;
     private boolean isSearchStarted = false;
     private UdpServer udpServer = null;
 
@@ -62,7 +63,6 @@ public class SDDClientService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "<onStartCommand> start");
         searchType = intent.getStringExtra(INTENT_EXTRA_NAME_SEARCH_TYPE);
-        onDeviceChangeListener = intent.getParcelableExtra(INTENT_EXTRA_NAME_ON_DEVICE_CHANGE_LISTENER);
 
         startUdpServer();
         startSearchDevice();
@@ -117,18 +117,7 @@ public class SDDClientService extends Service {
         Log.i(TAG, "<startUdpServer> start");
 
         udpServer = new UdpServer(UDP_SERVER_PORT);
-        udpServer.setOnRemoteDataReceiveListener(new IOnRemoteDataReceiveListener() {
-            @Override
-            public void onRemoteDataReceive(String remoteIp, int remotePort, String remoteData) {
-                Log.i(TAG, "<startUdpServer:onRemoteDataReceive> " + remoteIp + ", "
-                    + remotePort + ", " + remoteData);
-                SDDDevice device = SDDDevice.parse(remoteData);
-                if (null != onDeviceChangeListener &&
-                        null != device) {
-                    onDeviceChangeListener.onDeviceChange(device);
-                }
-            }
-        });
+        udpServer.setOnRemoteDataReceiveListener(this);
         udpServer.start();
     }
 
@@ -138,6 +127,30 @@ public class SDDClientService extends Service {
         if (null != udpServer) {
             udpServer.close();
             udpServer = null;
+        }
+    }
+
+    @Override
+    public void onRemoteDataReceive(String remoteIp, int remotePort, String remoteData) {
+        Log.i(TAG, "<onRemoteDataReceive> " + remoteIp + ", "
+                + remotePort + ", " + remoteData);
+        try {
+            JSONObject jsonObject = new JSONObject(remoteData);
+
+            String msgType = jsonObject.getString("msgType");
+            if (null == msgType) {
+                return;
+            }
+            Log.i(TAG, "<onRemoteDataReceive> msgType = " + msgType);
+            if (msgType.equals(SDDConstant.MSG_TYPE_ON_LINE)) {
+                SDDDevice device = SDDDevice.parse(jsonObject);
+                SDDDeviceManager.addDevice(device);
+            } else if (msgType.equals(SDDConstant.MSG_TYPE_OFF_LINE)) {
+                SDDDevice device = SDDDevice.parse(jsonObject);
+                SDDDeviceManager.removeDevice(device);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 }

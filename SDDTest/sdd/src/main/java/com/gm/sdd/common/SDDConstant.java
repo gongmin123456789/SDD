@@ -9,4 +9,6 @@ public class SDDConstant {
     public static final int UDP_PORT2 = 18888;
     public static final String BROADCAST_ADDR = "255.255.255.255";
     public static final String SEARCH_DEVICE_CMD_HEAD = "SDD_SEARCH:";
+    public static final String MSG_TYPE_ON_LINE = "onLine";
+    public static final String MSG_TYPE_OFF_LINE = "offLine";
 }

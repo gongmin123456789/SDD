@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/sdd" />
             <option value="$PROJECT_DIR$/sddclienttest" />
+            <option value="$PROJECT_DIR$/sddservertest" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

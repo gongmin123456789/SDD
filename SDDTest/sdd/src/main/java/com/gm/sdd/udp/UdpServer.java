@@ -25,7 +25,6 @@ public class UdpServer {
 
     public UdpServer(int port) {
         this.port = port;
-        start();
     }
 
     public void setOnRemoteDataReceiveListener(IOnRemoteDataReceiveListener onRemoteDataReceiveListener) {

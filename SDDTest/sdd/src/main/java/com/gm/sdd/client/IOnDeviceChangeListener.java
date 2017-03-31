@@ -7,5 +7,6 @@ import com.gm.sdd.common.SDDDevice;
  */
 
 public interface IOnDeviceChangeListener {
-    public void onDeviceChange(final SDDDevice newAddedDevice);
+    public void onDeviceOnLine(final SDDDevice device);
+    public void onDeviceOffLine(final SDDDevice device);
 }
