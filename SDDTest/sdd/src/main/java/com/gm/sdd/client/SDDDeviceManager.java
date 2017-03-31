@@ -2,10 +2,13 @@ package com.gm.sdd.client;
 
 import android.util.Log;
 
+import com.gm.sdd.common.SDDConstant;
 import com.gm.sdd.common.SDDDevice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by 80066158 on 2017-03-31.
@@ -43,6 +46,7 @@ public class SDDDeviceManager {
             }
 
             deviceList.add(device);
+            restartDeviceExpirationTimer(device);
         }
 
         if (null != onDeviceChangeListener) {
@@ -110,5 +114,28 @@ public class SDDDeviceManager {
         }
 
         return false;
+    }
+
+    private static void restartDeviceExpirationTimer(final SDDDevice device) {
+        if (null == device) {
+            Log.w(TAG, "<restartDeviceExpirationTimer> device is null");
+            return;
+        }
+
+        Timer timer = device.getTimer();
+        if (null != timer) {
+            timer.cancel();
+        }
+
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Log.i(TAG, "<restartDeviceExpirationTimer:run> " + device.toString());
+                removeDevice(device);
+            }
+        }, SDDConstant.SDD_DEVICE_EXPIRATION_TIME * 1000);
+
+        device.setTimer(timer);
     }
 }

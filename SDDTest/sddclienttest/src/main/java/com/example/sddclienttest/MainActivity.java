@@ -64,13 +64,23 @@ public class MainActivity extends AppCompatActivity implements IOnDeviceChangeLi
     public void onDeviceOnLine(SDDDevice device) {
         Log.i(TAG, "<onDeviceOnLine> " + device.toString());
 
-        deviceListViewAdapter.setDeviceList(sddClient.getDeviceList());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                deviceListViewAdapter.setDeviceList(sddClient.getDeviceList());
+            }
+        });
     }
 
     @Override
     public void onDeviceOffLine(SDDDevice device) {
         Log.i(TAG, "<onDeviceOffLine> " + device.toString());
 
-        deviceListViewAdapter.setDeviceList(sddClient.getDeviceList());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                deviceListViewAdapter.setDeviceList(sddClient.getDeviceList());
+            }
+        });
     }
 }

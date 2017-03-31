@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Timer;
+
 /**
  * Created by 80066158 on 2017-03-17.
  */
@@ -26,6 +28,7 @@ public class SDDDevice implements Parcelable {
     private String iconUrl = null;
     private int port = 0;
     private String deviceType = null;
+    private Timer timer = null; // this time is use to auto delete this device
 
     public SDDDevice() {}
 
@@ -105,6 +108,14 @@ public class SDDDevice implements Parcelable {
 
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
     }
 
     public static SDDDevice parse(JSONObject jsonObject) {
