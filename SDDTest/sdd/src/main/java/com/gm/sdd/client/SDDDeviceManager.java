@@ -42,6 +42,8 @@ public class SDDDeviceManager {
 
             if (isDeviceExist(device)) {
                 Log.w(TAG, "<addDevice> " + device.toString() + "-----already exist");
+                SDDDevice tempDevice = getDevice(device.getUuid());
+                restartDeviceExpirationTimer(tempDevice);
                 return;
             }
 
@@ -114,6 +116,21 @@ public class SDDDeviceManager {
         }
 
         return false;
+    }
+
+    private static SDDDevice getDevice(String uuid) {
+        if (null == uuid ||
+                null == deviceList) {
+            return null;
+        }
+
+        for (SDDDevice sddDevice : deviceList) {
+            if (uuid.equals(sddDevice.getUuid())) {
+                return sddDevice;
+            }
+        }
+
+        return null;
     }
 
     private static void restartDeviceExpirationTimer(final SDDDevice device) {

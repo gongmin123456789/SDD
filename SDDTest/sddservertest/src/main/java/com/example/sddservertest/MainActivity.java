@@ -7,6 +7,7 @@ import android.util.Log;
 import com.gm.sdd.common.SDDDevice;
 import com.gm.sdd.server.SDDServer;
 
+
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
 
@@ -28,6 +29,12 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "<onDestroy> start");
         stopSDDServer();
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.i(TAG, "<onBackPressed> start");
+        finish();
     }
 
     private void startSDDServer() {
