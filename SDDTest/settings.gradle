@@ -1,1 +1,1 @@
-include ':sddclienttest', ':sdd', ':sddservertest'
+include ':sddclienttest', ':sdd', ':sddservertest', ':picasso'

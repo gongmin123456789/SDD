@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/SDDTest.iml" filepath="$PROJECT_DIR$/SDDTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/myapplication/myapplication.iml" filepath="$PROJECT_DIR$/myapplication/myapplication.iml" />
       <module fileurl="file://$PROJECT_DIR$/myapplication/myapplication.iml" filepath="$PROJECT_DIR$/myapplication/myapplication.iml" />
+      <module fileurl="file://$PROJECT_DIR$/picasso/picasso.iml" filepath="$PROJECT_DIR$/picasso/picasso.iml" />
       <module fileurl="file://$PROJECT_DIR$/sdd/sdd.iml" filepath="$PROJECT_DIR$/sdd/sdd.iml" />
       <module fileurl="file://$PROJECT_DIR$/sddclienttest/sddclienttest.iml" filepath="$PROJECT_DIR$/sddclienttest/sddclienttest.iml" />
       <module fileurl="file://$PROJECT_DIR$/sddservertest/sddservertest.iml" filepath="$PROJECT_DIR$/sddservertest/sddservertest.iml" />

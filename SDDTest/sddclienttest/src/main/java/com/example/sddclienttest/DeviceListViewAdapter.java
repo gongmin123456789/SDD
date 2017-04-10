@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gm.sdd.common.SDDDevice;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -19,8 +20,10 @@ import java.util.List;
 public class DeviceListViewAdapter extends BaseAdapter {
     private List<SDDDevice> deviceList = null;
     private LayoutInflater inflater = null;
+    private Context context = null;
 
     public DeviceListViewAdapter(Context context, List<SDDDevice> deviceList) {
+        this.context = context;
         this.deviceList = deviceList;
         inflater = LayoutInflater.from(context);
     }
@@ -70,6 +73,19 @@ public class DeviceListViewAdapter extends BaseAdapter {
 
         viewHolder.title.setText(deviceList.get(i).getName());
         viewHolder.subtitle.setText(deviceList.get(i).getIp());
+
+        try {
+            Picasso.with(context)
+                    .load(deviceList.get(i).getIconUrl())
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher)
+                    .fit()
+                    .centerInside()
+                    .into(viewHolder.icon);
+        } catch (Exception e) {
+            e.printStackTrace();
+            viewHolder.icon.setImageResource(R.mipmap.ic_launcher);
+        }
 
         return view;
     }

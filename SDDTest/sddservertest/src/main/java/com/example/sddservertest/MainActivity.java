@@ -1,14 +1,10 @@
 package com.example.sddservertest;
 
-import android.app.ActivityManager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.gm.sdd.common.SDDDevice;
 import com.gm.sdd.server.SDDServer;
-
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         Log.i(TAG, "<startSDDServer> start");
 
         sddServer = new SDDServer(this);
-        sddServer.setIcon(R.mipmap.ic_launcher);
+        sddServer.setIcon(R.drawable.device_icon);
+        sddServer.setDeviceType(DEVICE_TYPE);
         sddServer.start();
     }
 
