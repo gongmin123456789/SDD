@@ -168,7 +168,7 @@ public class SDDDevice implements Parcelable {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put(UUID, uuid);
-            jsonObject.put(NAME, uuid);
+            jsonObject.put(NAME, name);
             jsonObject.put(IP, ip);
             jsonObject.put(MAC, mac);
             jsonObject.put(ICON_URL, iconUrl);

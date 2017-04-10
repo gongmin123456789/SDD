@@ -114,6 +114,7 @@ public class SDDServer implements IOnRemoteDataReceiveListener {
         device.setPort(DEFAULT_HTTP_SERVER_PORT);
         device.setIp(getIPAddress(context));
         device.setMac(getMacAddress(context));
+        device.setUuid(device.getMac());
 
         String iconUrl = "http://" + device.getIp() + ":" + device.getPort() + MyHttpServer.getIconUri();
         device.setIconUrl(iconUrl);
