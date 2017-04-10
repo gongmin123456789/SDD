@@ -1,11 +1,14 @@
 package com.example.sddservertest;
 
+import android.app.ActivityManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.gm.sdd.common.SDDDevice;
 import com.gm.sdd.server.SDDServer;
+
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ((MyApplication) getApplication()).addActivity(this);
         startSDDServer();
     }
 
@@ -28,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         Log.i(TAG, "<onDestroy> start");
         stopSDDServer();
+
+        ((MyApplication) getApplication()).exit();
+
         super.onDestroy();
     }
 
@@ -40,15 +47,8 @@ public class MainActivity extends AppCompatActivity {
     private void startSDDServer() {
         Log.i(TAG, "<startSDDServer> start");
 
-        SDDDevice device = new SDDDevice();
-        device.setDeviceType(DEVICE_TYPE);
-        device.setName("SDDDevice1");
-        device.setPort(0);
-        device.setIconUrl("");
-        device.setMac("macAddr");
-        device.setIp("ipAddr");
-        device.setUuid("1234567890");
-        sddServer = new SDDServer(this, device);
+        sddServer = new SDDServer(this);
+        sddServer.setIcon(R.mipmap.ic_launcher);
         sddServer.start();
     }
 

@@ -17,4 +17,5 @@ android {
 }
 
 dependencies {
+    compile files('libs/nanohttpd-webserver-2.1.1-jar-with-dependencies.jar')
 }
